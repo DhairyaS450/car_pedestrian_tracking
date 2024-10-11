@@ -1,14 +1,16 @@
 import cv2
 
-# Image/Video
-img_file = 'carimage2.jpeg'
-
 # Pre-trained Car Classifier
-classifier_file = 'car_detector.xml'
+car_classifier_file = 'car_detector.xml'
 
 # Create Car classifier
-car_tracker = cv2.CascadeClassifier(classifier_file)
+car_tracker = cv2.CascadeClassifier(car_classifier_file)
 
+# Pre-trained Pedestrian Classifier
+pedestrian_classifier_file = 'haarcascade_fullbody.xml'
+
+# Create Pedestrian Classifier
+pedestrian_tracker = cv2.CascadeClassifier(pedestrian_classifier_file)
 
 def track_image(img_file: str):
 
@@ -21,10 +23,17 @@ def track_image(img_file: str):
     # Detect Cars
     cars = car_tracker.detectMultiScale(black_n_white)
 
+    # Detect Pedestrians
+    pedestrians = pedestrian_tracker.detectMultiScale(black_n_white)
+
     # Draw rectangles around the cars
     for (x, y, w, h) in cars:
         cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
+    # Draw rectangles around the pedestrians
+    for (x, y, w, h) in pedestrians:
+        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+    
     # Display the image with the cars spotted
     cv2.imshow('Car and Pedestrian Detector', img)
 
@@ -47,10 +56,17 @@ def track_video(video_file: str):
 
         # Detect Cars
         cars = car_tracker.detectMultiScale(black_n_white)
+        
+        # Detect Pedestrians
+        pedestrians = pedestrian_tracker.detectMultiScale(black_n_white)
 
         # Draw rectangles around the cars
         for (x, y, w, h) in cars:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+        # Draw rectangles around the pedestrians
+        for (x, y, w, h) in pedestrians:
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
         # Display the image with the cars spotted
         cv2.imshow('Car and Pedestrian Detector', frame)
@@ -58,6 +74,6 @@ def track_video(video_file: str):
         # Dont autoclose
         cv2.waitKey(1)
 
-track_video('car_tracker1.mp4')
+track_video('assets/toronto.mp4')
 
 print("Code Completed")
