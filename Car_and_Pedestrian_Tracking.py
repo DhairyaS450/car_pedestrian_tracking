@@ -72,7 +72,11 @@ def track_video(video_file: str):
         cv2.imshow('Car and Pedestrian Detector', frame)
 
         # Dont autoclose
-        cv2.waitKey(1)
+        key = cv2.waitKey(1)
+
+        # Stop if Q is pressed
+        if key == 81 or key == 131:
+            break
 
 track_video('assets/toronto.mp4')
 
